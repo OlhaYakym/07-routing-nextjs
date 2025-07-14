@@ -1,7 +1,7 @@
 "use client";
 import css from "./NotePreview.client.module.css";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { fetchNoteById } from "@/lib/api";
 import Modal from "@/components/Modal/Modal";
 import { useState } from "react";
@@ -17,12 +17,15 @@ const NotePreview = () => {
     queryFn: () => fetchNoteById(Number(id)),
     refetchOnMount: false,
   });
-
+  const route = useRouter();
   if (isLoading) return <p>Loading, please wait...</p>;
   if (error || !note) return <p>Something went wrong.</p>;
 
-  const togleModal = () => setIsModalOpen(!isModalOpen);
-  console.log(togleModal);
+  const togleModal = () => {
+    setIsModalOpen(!isModalOpen);
+    route.back();
+  };
+  // console.log(togleModal);
 
   return (
     <>
